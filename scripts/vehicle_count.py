@@ -4,12 +4,11 @@ import numpy as np
 from .tracker import EuclideanDistTracker
 
 class VehicleCounter():
-    def __init__(self, file, video_dim,fps, lineStart,lineEnd, threshold, showVideo):
+    def __init__(self, file, video_dim,fps, lineDim, threshold, showVideo):
         self.file = file
         self.video_dim = video_dim
         self.fps = fps
-        self.lineStart = lineStart
-        self.lineEnd = lineEnd
+        self.lineDim = lineDim
         self.showVideo = showVideo
         self.tracker = EuclideanDistTracker()
         self.middle_line_position = 155
@@ -98,7 +97,6 @@ class VehicleCounter():
         net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
         while True:
             success, img = cap.read()
-            print(cap.get(cv2.CAP_PROP_FRAME_WIDTH),cap.get(cv2.CAP_PROP_FRAME_WIDTH) )
 
             img = cv2.resize(img,(0,0),None,.5,.5)
 
@@ -177,6 +175,24 @@ class VehicleCounter():
             if id in self.temp_up_list:
                 self.temp_up_list.remove(id)
                 self.down_list[index] = self.down_list[index] + 1
+
+        # New way is to find the cross product, turn line and point into two vectors
+        
+        x1 = self.lineDim[0][0]
+        y1 = self.lineDim[0][1]
+        x2 =  self.lineDim[1][0]
+        y2 = self.lineDim[1][1]
+        xA = ix
+        yA = iy
+        v1 = (x1 - x2,y2-y1)
+        v2 = (x2-xA , y2-yA )
+        xp = v1[0] * v2[1] - v1[1] * v2[0]
+        if(xp > 0):
+            print('left of line')
+        # if(xp < 0):
+        #     print('right of line')
+        # else:
+        #     print('on the line')
 
         # Draw circle in the middle of the rectangle
         cv2.circle(img, center, 2, (0, 0, 255), -1)  # end here

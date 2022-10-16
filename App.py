@@ -17,6 +17,7 @@ class App(TkinterDnD.Tk):
         self.title("Vehicle Detection")
         self.header = header
         self.clicked_coords = (0,0)
+        self.line_coords = [(0,0),(0,0)]
         self.raw_image = []
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
@@ -28,15 +29,13 @@ class App(TkinterDnD.Tk):
 
         def processVideoApply():
             file = input_video_val.get()
-            lineStart = tuple(origin_coord_val.get())
-            lineEnd = tuple(dest_coord_val.get())
             showVideo = True
             video_dim = (200,200)
             fps = 30
             cleanThreshold = validateThreshold(threshold_val.get())
             if(not cleanThreshold):
                 return False
-            tracker = VehicleCounter(file, video_dim,fps, lineStart,lineEnd, 15, showVideo)
+            tracker = VehicleCounter(file, video_dim,fps, self.line_coords, 15, showVideo)
             tracker.start()
 
         def buildThreshold(img, thickness, origin_coords,destination_coords):
@@ -59,6 +58,7 @@ class App(TkinterDnD.Tk):
             edited_imaged = raw_image.copy()
             if(self.clicked_coords == (0,0)):
                 origin_coord = f'({event.x} , {event.y})'
+                self.line_coords[0] = (event.x,event.y)
                 edited_imaged = cv2.putText(img=edited_imaged,text=origin_coord,org=(0,50),fontFace=cv2.FONT_HERSHEY_COMPLEX, fontScale=1, color=(255, 0,0))
                 edited_imaged = cv2.putText(img=edited_imaged,text=" -> ", org=(200,50),fontFace=cv2.FONT_HERSHEY_COMPLEX, fontScale=1, color=(255, 0, 0))
                 origin_coord_val.delete(0, END)
@@ -71,6 +71,7 @@ class App(TkinterDnD.Tk):
             else:
                 origin_coord = f'({self.clicked_coords[0]} , {self.clicked_coords[1]})'
                 destination_coord = f'({event.x} , {event.y})'
+                self.line_coords[1] = (event.x,event.y)
                 edited_imaged = cv2.putText(img=edited_imaged,text=origin_coord, org=(0,50),fontFace=cv2.FONT_HERSHEY_COMPLEX, fontScale=1, color=(255, 0, 0))
                 edited_imaged = cv2.putText(img=edited_imaged,text=" -> ", org=(200,50),fontFace=cv2.FONT_HERSHEY_COMPLEX, fontScale=1, color=(255, 0, 0))
                 edited_imaged = cv2.putText(img=edited_imaged,text=destination_coord, org=(300,50),fontFace=cv2.FONT_HERSHEY_COMPLEX,fontScale=1, color=(255, 0, 0))
