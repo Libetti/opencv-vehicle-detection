@@ -27,6 +27,69 @@ class App(TkinterDnD.Tk):
 
     def buildGui(self):
 
+        # # Create Left side inputs column
+        inputs_frame = Frame(self)
+        inputs_frame.grid(column=0, row=0,columnspan = 3, rowspan = 3, sticky=NW)
+
+        # # Create Right side video column
+        video_frame = Frame(self)
+        video_frame.grid(column=1, row=0, sticky=E, columnspan = 1)
+
+        # # Create Footer
+        footer = Frame(self)
+        footer.grid(column=0, row=4)
+
+        # # Add box for video preview
+        lmain = Label(video_frame)
+        lmain.grid(column=0,row=0,sticky=NW,padx = 20,pady = 20)
+
+
+        # # Top level instructions
+        instructions = Label(master=inputs_frame,text="Drag an mp4 or .avi onto the bar")
+        instructions.grid(column=0,row=0, sticky=NW)
+
+        # # Root directory input
+        root_label = Label(inputs_frame, text="Root Directory")
+        root_label.grid(row = 1, column = 0,pady = 2, sticky=W)
+        root_val = Entry(inputs_frame, bd =5, w="70")
+        root_val.insert(0, os.getcwd() )
+        root_val.grid(row = 1, column = 1, pady = 2, sticky=W)
+
+
+        # # File input and apply input
+        strVar = StringVar()
+        input_video_label = Label(master=inputs_frame, text="Input Video")
+        input_video_label.grid(row = 2, column = 0, sticky = W, pady = 20,)
+        input_video_val = Entry(master=inputs_frame, textvar=strVar, bd=5,w="70")
+        input_video_val.drop_target_register(DND_FILES)
+        apply_video_btn = Button( master=inputs_frame, text=u"\U0001F4C1", command=video_apply )
+
+        apply_video_btn.grid(row = 2, column = 2, sticky = W, pady = 20)
+        input_video_val.grid(row = 2, column = 1, sticky =W, pady = 20)
+
+        # # Threshold Input
+        threshold_label = Label(master=inputs_frame, text="Threshold")
+        threshold_label.grid(row = 4, column = 0, sticky = W, pady = 20,) 
+        threshold_val = Entry(master=inputs_frame, textvar="15", bd=5,w="15")
+        threshold_val.insert(0, "15")
+        threshold_val.grid(row=4,column=1, columnspan=1,sticky=W)
+
+        # # Coords of line
+        coords_frame = Frame(inputs_frame)
+        spacer = Label(master=coords_frame,text="",)
+        spacer.grid(row=0,column=1)
+        coords_frame.grid(row=3,column=0, columnspan=4,sticky=W)
+        coords_label = Label(master=coords_frame, text="Line Coords")
+        coords_label.grid(row=0,column=0, sticky = W)
+        origin_coord_val = Entry(master=coords_frame,  bd=5,w="15")
+        dest_coord_val = Entry(master=coords_frame, bd=5,w="15")
+        origin_coord_val.grid(row=0,column=3,sticky = W)
+        dest_coord_val.grid(row=0,column=4, sticky = W)
+
+        # Process button
+        process_button = Button ( footer, text ="Process Video", command=processVideoApply)
+        process_button.grid(column=0,row=0, sticky=SW)
+
         def processVideoApply():
             file = input_video_val.get()
             showVideo = True
@@ -109,70 +172,6 @@ class App(TkinterDnD.Tk):
                 lmain.configure(image=imgtk)
                 lmain.bind( "<Button>", lambda evt: get_click_coords(evt,self.raw_image) )  
             cap.release()
-
-        # # Create Left side inputs column
-        inputs_frame = Frame(self)
-        inputs_frame.grid(column=0, row=0,columnspan = 3, rowspan = 3, sticky=NW)
-
-        # # Create Right side video column
-        video_frame = Frame(self)
-        video_frame.grid(column=1, row=0, sticky=E, columnspan = 1)
-
-        # # Create Footer
-        footer = Frame(self)
-        footer.grid(column=0, row=4)
-
-        # # Add box for video preview
-        lmain = Label(video_frame)
-        lmain.grid(column=0,row=0,sticky=NW,padx = 20,pady = 20)
-
-
-        # # Top level instructions
-        instructions = Label(master=inputs_frame,text="Drag an mp4 or .avi onto the bar")
-        instructions.grid(column=0,row=0, sticky=NW)
-
-        # # Root directory input
-        root_label = Label(inputs_frame, text="Root Directory")
-        root_label.grid(row = 1, column = 0,pady = 2, sticky=W)
-        root_val = Entry(inputs_frame, bd =5, w="70")
-        root_val.insert(0, os.getcwd() )
-        root_val.grid(row = 1, column = 1, pady = 2, sticky=W)
-
-
-        # # File input and apply input
-        strVar = StringVar()
-        input_video_label = Label(master=inputs_frame, text="Input Video")
-        input_video_label.grid(row = 2, column = 0, sticky = W, pady = 20,)
-        input_video_val = Entry(master=inputs_frame, textvar=strVar, bd=5,w="70")
-        input_video_val.drop_target_register(DND_FILES)
-        apply_video_btn = Button( master=inputs_frame, text=u"\U0001F4C1", command=video_apply )
-
-        apply_video_btn.grid(row = 2, column = 2, sticky = W, pady = 20)
-        input_video_val.grid(row = 2, column = 1, sticky =W, pady = 20)
-
-        # # Threshold Input
-        threshold_label = Label(master=inputs_frame, text="Threshold")
-        threshold_label.grid(row = 4, column = 0, sticky = W, pady = 20,) 
-        threshold_val = Entry(master=inputs_frame, textvar="15", bd=5,w="15")
-        threshold_val.insert(0, "15")
-        threshold_val.grid(row=4,column=1, columnspan=1,sticky=W)
-
-        # # Coords of line
-        coords_frame = Frame(inputs_frame)
-        spacer = Label(master=coords_frame,text="",)
-        spacer.grid(row=0,column=1)
-        coords_frame.grid(row=3,column=0, columnspan=4,sticky=W)
-        coords_label = Label(master=coords_frame, text="Line Coords")
-        coords_label.grid(row=0,column=0, sticky = W)
-        origin_coord_val = Entry(master=coords_frame,  bd=5,w="15")
-        dest_coord_val = Entry(master=coords_frame, bd=5,w="15")
-        origin_coord_val.grid(row=0,column=3,sticky = W)
-        dest_coord_val.grid(row=0,column=4, sticky = W)
-
-        # Process button
-        process_button = Button ( footer, text ="Process Video", command=processVideoApply)
-        process_button.grid(column=0,row=0, sticky=SW)
-
         
 
     def set_coords(self,x,y):
