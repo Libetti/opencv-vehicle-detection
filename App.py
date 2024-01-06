@@ -128,7 +128,7 @@ class App(Tk):
             print('in video apply')
             filename = filedialog.askopenfile(
                 title='Open a file',
-                initialdir='./rawVideo',
+                initialdir='./video',
                 filetypes=(
                     ('mp4 files', '*.mp4'),
                     ('wav files', '*.wav*'),
