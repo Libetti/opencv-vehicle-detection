@@ -1,9 +1,12 @@
 import cv2
-import csv
 import numpy as np
+from os import getcwd
 from .tracker import EuclideanDistTracker
 
+ROOT = getcwd()
+
 class VehicleCounter():
+    print(f'{ROOT}/model/yolov3-320.cfg')
     def __init__(self, file, video_dim, fps, lineDim, threshold, showVideo, theox, theoy, thedx, thedy):
         # print(' in vehicle counter INIT')
         self.file = file
@@ -55,7 +58,7 @@ class VehicleCounter():
         np.random.seed(42)
         confThreshold = 0.2
         nmsThreshold = 0.2
-        classesFile = "D:/video/model/coco.names"
+        classesFile = f'{ROOT}/model/coco.names'
         classNames = open(classesFile).read().strip().split('\n')
         colors = np.random.randint(0, 255, size=(
             len(classNames), 3), dtype='uint8')
@@ -123,8 +126,8 @@ class VehicleCounter():
         font_size = 0.5
         font_thickness = 2
         # Model Files
-        modelConfiguration = 'D:/video/model/yolov3-320.cfg'
-        modelWeigheights = 'D:/video/model/yolov3-320.weights'
+        modelConfiguration = f'{ROOT}/model/yolov3-320.cfg'
+        modelWeigheights = f'{ROOT}/model/yolov3-320.weights'
 
         # configure the network model
         net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeigheights)

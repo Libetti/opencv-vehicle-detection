@@ -1,7 +1,6 @@
 from email import header
 from tkinter import Tk, filedialog, E, END, NW, SW, W, Label, Frame, Entry, Button, StringVar
 from PIL import Image, ImageTk
-# from scripts.vehicle_count import *
 import cv2
 import os
 from scripts.utils import validateThreshold
