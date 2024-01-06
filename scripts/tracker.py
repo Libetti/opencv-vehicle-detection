@@ -8,7 +8,6 @@ class EuclideanDistTracker:
         # each time a new object id detected, the count will increase by one
         self.id_count = 0
 
-
     def update(self, objects_rect):
         # Objects boxes and ids
         objects_bbs_ids = []
@@ -24,7 +23,8 @@ class EuclideanDistTracker:
             for id, pt in self.center_points.items():
                 dist = math.hypot(cx - pt[0], cy - pt[1])
 
-                if dist < 25:
+                # if dist < 25:
+                if dist < 200:
                     self.center_points[id] = (cx, cy)
                     # print(self.center_points)
                     objects_bbs_ids.append([x, y, w, h, id, index])
